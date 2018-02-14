@@ -8,29 +8,47 @@ const xmax = 1;
 const ymax = 1;
 
 let f
+let answer
+let dx
+let dy
+let dxSlider
+let dySlider
+let slider
 
 function setup() {
+	dx = random(-1, 1)
+	dy = random(-1, 1)
+	f = x => dx * x + dy
+	answer = (x, y) => f(x) > y ? 1 : -1
+
 	createCanvas(500, 500)
+	createP('Points:')
+	slider = createSlider(10, 10000, 1000)
+	createP('dX:')
+	dxSlider = createSlider(-1, 1, dx, 0.01)
+	createP('dY:')
+	dySlider = createSlider(-1, 1, dy, 0.01)
 	brain = new Perceptron(3, 0.5)
-	f = ((dx, dy) => x => dx * x + dy)(random(-1, 1), random(-1, 1))
-	for (let i = 0; i < 5000; i++) {
-		let x = random(xmin, xmax)
-		let y = random(ymin, ymax)
-		let answer = f(x) > y ? 1 : -1
-		points.push({
-			inputs: [x, y, 1],
-			output: answer
-		})
-	}
 }
 
 let trainingIndex = 0
 function singleTraining() {
+	if (points.length != slider.value()) {
+		points = []
+		trainingIndex = 0
+		for (let i = 0; i < slider.value(); i++) {
+			let x = random(xmin, xmax)
+			let y = random(ymin, ymax)
+			points.push([x, y, 1])
+		}
+	}
+
 	let first = trainingIndex
 	let goOn = true
 	while (goOn) {
 		let p = points[trainingIndex]
-		goOn = 0 == brain.train(p.inputs, p.output)
+		let expected = answer(p[0], p[1])
+		goOn = 0 == brain.train(p, expected)
 		trainingIndex = (trainingIndex + 1) % points.length
 		if (first == trainingIndex) {
 			break;
@@ -39,28 +57,40 @@ function singleTraining() {
 }
 
 function draw() {
-	background(200)
+	if (dx != dxSlider.value() || dy != dySlider.value()) {
+		dx = dxSlider.value()
+		dy = dySlider.value()
+		brain.learningRate = 0.5
+	}
+
+	drawBoard()
 	drawFunctionLine()
 	drawWeightLine();
+	singleTraining()
+}
 
-	stroke(100)
+function drawBoard() {
+	background(100)
+
+	noStroke()
+
 	for (let p of points) {
-		let guess = brain.guess(p.inputs)
-		if (guess == p.output) {
+		let guess = brain.predict(p)
+		if (guess == answer(p[0], p[1])) {
 			fill(0, 255, 0)
 		} else {
 			fill(255, 0, 0)
 		}
 
-		let x = map(p.inputs[0], xmin, xmax, 0, width)
-		let y = map(p.inputs[1], ymin, ymax, 0, height)
+		let x = map(p[0], xmin, xmax, 0, width)
+		let y = map(p[1], ymin, ymax, 0, height)
 		ellipse(x, y, 6)
 	}
-	singleTraining()
 }
 
 function drawFunctionLine() {
 	stroke(255)
+	strokeWeight(3)
 	line(map(xmin, xmin, xmax, 0, width),
 		map(f(xmin), ymin, ymax, 0, height),
 		map(xmax, xmin, xmax, 0, width),
@@ -70,6 +100,7 @@ function drawFunctionLine() {
 
 function drawWeightLine() {
 	stroke(0)
+	strokeWeight(3)
 	let weights = brain.weights
 	let x1 = xmin
 	let y1 = (-weights[2] - weights[0] * x1) / weights[1]

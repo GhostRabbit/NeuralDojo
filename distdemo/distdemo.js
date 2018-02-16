@@ -1,6 +1,10 @@
 let brain
-let slider
-let p
+let nSlider
+let nLabel
+let pSlider
+let pLabel
+let lSlider
+let lLabel
 let type
 let button
 
@@ -10,50 +14,67 @@ function setup() {
 	createCanvas(400, 400)
 
 	createP('')
-	slider = createSlider(1, 100, 1)
-	p = createP()
-	updateBrain()
 	type = createRadio()
 	type.option('Predict')
 	type.option('Error')
 	type.selected('Predict')
-	button = createButton('Move points')
+
+
+	nSlider = createSlider(1, 100, 1)
+	nLabel = createSpan()
+	createP('')
+	updateBrain()
+
+	lSlider = createSlider(0.001, 0.5, brain.learningRate, 0.001)
+	lLabel = createSpan()
+	createP('')
+	updateLearningRate()
+
+	pSlider = createSlider(1, 5, 2)
+	pLabel = createSpan()
+	createP('')
+	button = createButton('Randomize regions')
 	button.mousePressed(makePoints)
 
 	makePoints()
-	background(100)
 }
 
 function makePoints() {
 	points = []
-	for (let i = 0; i < 2; i++) {
+	for (let i = 0; i < pSlider.value(); i++) {
 		points.push(createVector(random(0.2, 0.8), random(0.2, 0.8)))
 	}
+	pLabel.html(pSlider.value() + ' regions')
 }
 
 function updateBrain() {
-	brain = new NeuralNetwork(2, slider.value(), 1)
-	p.html(slider.value() + ' hidden nodes')
+	brain = new NeuralNetwork(2, nSlider.value(), 1)
+	nLabel.html(nSlider.value() + ' hidden nodes')
+}
+
+function updateLearningRate() {
+	brain.learningRate = lSlider.value()
+	lLabel.html('LR ' + lSlider.value())
 }
 
 function draw() {
-	if (brain.hidden_nodes != round(slider.value())) {
+	if (brain.hidden_nodes != nSlider.value()) {
 		updateBrain()
+	}
+	if (brain.learningRate != lSlider.value()) {
+		updateLearningRate()
+	}
+	if (points.length != pSlider.value()) {
+		makePoints()
 	}
 	drawBoard()
 	drawPoints()
-	if (type.value() != 'Error') {
-		train()
-	}
+	train()
 }
 
 function drawPoints() {
 	for (let i = 0; i < points.length; i++) {
-		strokeWeight(3)
-		stroke(0, 0, 255)
-		fill(0, 255, 255)
-		ellipse(points[i].x * width, points[i].y * height, 10)
-		strokeWeight(1)
+		strokeWeight(2)
 		stroke(255)
 		noFill()
 		ellipse(points[i].x * width, points[i].y * height, width * 0.2)
@@ -63,22 +84,25 @@ function drawPoints() {
 function drawBoard() {
 	noStroke()
 	let r = 5
-
+	let setFill
 	if (type.value() == 'Predict') {
-		for (let x = r; x < width; x += 2 * r) {
-			for (let y = r; y < height; y += 2 * r) {
-				let guess = brain.predict([x / width, y / height])[0]
-				fill(0, 255 * guess, 0)
-				rect(x - r, y - r, 2 * r, 2 * r)
-			}
+		setFill = (x, y) => {
+			let guess = brain.predict([x, y])[0]
+			fill(0, 255 * guess, 0)
 		}
 	} else {
-		for (let x = r; x < width; x += 2 * r) {
-			for (let y = r; y < height; y += 2 * r) {
-				let error = brain.train([x / width, y / height], [minDistToPoints(x / width, y / height)])[0]
-				fill(255 * error, 0, 0)
-				rect(x - r, y - r, 2 * r, 2 * r)
-			}
+		setFill = (x, y) => {
+			let guess = brain.predict([x, y])[0]
+			let correct = minDistToPoints(x, y)
+			let error = Math.abs(correct - guess)
+			fill(255 * error, 0, 0)
+		}
+	}
+
+	for (let x = r; x < width; x += 2 * r) {
+		for (let y = r; y < height; y += 2 * r) {
+			setFill(x / width, y / height)
+			rect(x - r, y - r, 2 * r, 2 * r)
 		}
 	}
 }

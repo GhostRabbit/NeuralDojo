@@ -9,25 +9,28 @@ const ymax = 1;
 
 let f
 let answer
-let dx
-let dy
-let dxSlider
-let dySlider
+let a
+let b
+let aSlider
+let bSlider
 let slider
 
 function setup() {
-	dx = random(-1, 1)
-	dy = random(-1, 1)
-	f = x => dx * x + dy
+	a = random(-1, 1)
+	b = random(-1, 1)
+	f = x => a * x + b
 	answer = (x, y) => f(x) > y ? 1 : -1
 
 	createCanvas(500, 500)
-	createP('Points:')
+	createP('')
+	createSpan('# Points:')
 	slider = createSlider(10, 10000, 1000)
-	createP('dX:')
-	dxSlider = createSlider(-1, 1, dx, 0.01)
-	createP('dY:')
-	dySlider = createSlider(-1, 1, dy, 0.01)
+	createP('')
+	createSpan('a:')
+	aSlider = createSlider(-1, 1, a, 0.01)
+	createP('')
+	createSpan('b:')
+	bSlider = createSlider(-1, 1, b, 0.01)
 	brain = new Perceptron(3, 0.5)
 }
 
@@ -57,9 +60,9 @@ function singleTraining() {
 }
 
 function draw() {
-	if (dx != dxSlider.value() || dy != dySlider.value()) {
-		dx = dxSlider.value()
-		dy = dySlider.value()
+	if (a != aSlider.value() || b != bSlider.value()) {
+		a = aSlider.value()
+		b = bSlider.value()
 		brain.learningRate = 0.5
 	}
 
@@ -69,19 +72,19 @@ function draw() {
 	singleTraining()
 }
 
+function colorFor(b) {
+	return [b ? 0 : 255, b ? 255 : 0, 0]
+}
+
 function drawBoard() {
 	background(100)
 
-	noStroke()
-
+	strokeWeight(1)
 	for (let p of points) {
 		let guess = brain.predict(p)
-		if (guess == answer(p[0], p[1])) {
-			fill(0, 255, 0)
-		} else {
-			fill(255, 0, 0)
-		}
-
+		let expected = answer(p[0], p[1])
+		fill(...colorFor(expected == 1))
+		stroke(...colorFor(expected == guess))
 		let x = map(p[0], xmin, xmax, 0, width)
 		let y = map(p[1], ymin, ymax, 0, height)
 		ellipse(x, y, 6)
@@ -90,7 +93,7 @@ function drawBoard() {
 
 function drawFunctionLine() {
 	stroke(255)
-	strokeWeight(3)
+	strokeWeight(4)
 	line(map(xmin, xmin, xmax, 0, width),
 		map(f(xmin), ymin, ymax, 0, height),
 		map(xmax, xmin, xmax, 0, width),
@@ -100,7 +103,7 @@ function drawFunctionLine() {
 
 function drawWeightLine() {
 	stroke(0)
-	strokeWeight(3)
+	strokeWeight(2)
 	let weights = brain.weights
 	let x1 = xmin
 	let y1 = (-weights[2] - weights[0] * x1) / weights[1]

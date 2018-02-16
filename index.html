@@ -41,11 +41,17 @@
         <li>(Artificial) Neural Network</li>
         <ul>
             <li>Feedforward</li>
+            <li>Deep Learning</li>
             <ul>
-                <li>Multi Layer Perceptron</li>
-                <li>Input/Hidden/Output</li>
-                <li>Weights/Activation</li>
-                <li>Training/Evaluation</li>
+                <ul>
+                    <li>Multi Layer Perceptron</li>
+                    <ul>
+                        <li>Fully Connected</li>
+                    </ul>
+                </ul>
+            </ul>
+            <li>Training/Evaluation</li>
+            <ul>
                 <li>Backpropagation</li>
             </ul>
         </ul>
@@ -57,15 +63,48 @@
             <a href="./perceptrondemo/demo.html">Perceptron demo</a>
         </li>
         <li>
-            <a href="./linedemo/demo.html">Neural Network line</a>
-        </li>
-        <li>
-            <a href="./distdemo/demo.html">Neural Network distance</a>
-        </li>
-        <li>
             <a href="./xordemo/demo.html">XOR demo</a>
         </li>
-        <li>Learning worm?</li>
+        <li>
+            <a href="./linedemo/demo.html">Neural Network line distance</a>
+        </li>
+        <li>
+            <a href="./distdemo/demo.html">Neural Network clustering</a>
+        </li>
+        <li>
+            <a href="./xor3demo/demo.html">XOR3D demo</a>
+        </li>
+    </ul>
+    <p>Snake game?</p>
+    <ul>
+        <li>
+            <a href="https://www.youtube.com/watch?v=3bhP7zulFfY">AI learns to play snake using Genetic Algorithm and Deep learning</a>
+        </li>
+        <li>
+            <a href="https://github.com/Code-Bullet/SnakeFusion">@github</a>
+        </li>
+        <li>What is different from examples above?
+            <ul>
+                <li>Brain is defined as 24 inputs, 16 hidden, 4 outputs</li>
+                <li>Inputs measure wall, food and self distance in 8 directions</li>
+                <li>Outputs are direction</li>
+                <li>Genetic training:
+                    <ul>
+                        <li>Each generation 2000 snakes</li>
+                        <li>Snake starves after 200 moves</li>
+                        <li>Eating prolongs life with 100 and snake grows)</li>
+                        <li>Fitness is defined as lifetime^2 * 2 * length (for small snakes)</li>
+                        <li>Natural selection occurs between generations
+                            <ul>
+                                <li>Best survives, rest is children</li>
+                                <li>A child is made from two (random based on fitness) parents</li>
+                                <li>A child brain is mutated based on parents</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </li>
     </ul>
 </body>
 

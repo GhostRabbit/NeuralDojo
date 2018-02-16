@@ -24,8 +24,8 @@ const training_data = [
 function setup() {
 	createCanvas(400, 400)
 	createP('')
-	slider = createSlider(1, 10, 1)
-	p = createP()
+	slider = createSlider(1, 8, 1)
+	p = createSpan()
 	updateBrain()
 }
 
@@ -51,7 +51,6 @@ function drawBoard() {
 	for (let x = 0; x < width; x += side) {
 		for (let y = 0; y < height; y += side) {
 			let inputs = [x / width, y / height]
-			// if (random() < 0.01) console.log(brain.predict(inputs))
 			fill(brain.predict(inputs)[0] * 255)
 			rect(x, y, side, side)
 		}
@@ -59,7 +58,7 @@ function drawBoard() {
 	for (let d of training_data) {
 		stroke(255 - d.output[0] * 255)
 		fill(d.output[0] * 255)
-		ellipse(d.input[0] * width, d.input[1] * height, 20)
+		ellipse(d.input[0] * width, d.input[1] * height, 60)
 	}
 }
 

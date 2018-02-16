@@ -1,7 +1,9 @@
 Just start in index.html
 
->npm install -g local-web-server
+npm install -g local-web-server
+
 ...
->ws
+
+ws
 
 Browse to localhost:8000

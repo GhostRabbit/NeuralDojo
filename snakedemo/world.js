@@ -27,7 +27,7 @@ class World {
             console.error('failure to find snake at', selectPoint, 'in', sum)
         }
 
-        let legendCount = this.snakes.length / 10 | 0
+        let legendCount = Math.max(1, this.snakes.length / 10 | 0)
         this.snakes = gradedSnakes.slice(0, legendCount)
             .map(gs => new Snake(this.gridsize, gs[1].brain))
             .concat(
@@ -42,11 +42,7 @@ class World {
     }
 
     show() {
-        for (let s of this.snakes) {
-            if (!s.alive) s.show()
-        }
-        for (let s of this.snakes) {
-            if (s.alive) s.show()
-        }
+        this.snakes.filter(s => !s.alive).forEach(s => s.show())
+        this.snakes.filter(s => s.alive).forEach(s => s.show())
     }
 }

@@ -123,9 +123,7 @@ class Snake {
     show() {
         stroke(0)
         this.alive ? fill(150, 100, 100) : fill(100)
-        for (let t of this.tail) {
-            rect(t.x + 1, t.y + 1, this.gridsize - 1, this.gridsize - 1)
-        }
+        this.tail.forEach(t => rect(t.x + 1, t.y + 1, this.gridsize - 1, this.gridsize - 1))
         this.alive ? fill(255, 200, 200) : fill(255)
         rect(this.head.x, this.head.y, this.gridsize, this.gridsize)
         if (this.alive) this.food.show()
@@ -150,7 +148,7 @@ class SnakeBrain {
 
     crossover(other) {
         let childBrain = new SnakeBrain()
-        let crossoverrate = random(0, 1)
+        let crossoverrate = Math.random()
         childBrain.weights_I2H = this.brain.weights_I2H.crossover(other.brain.weights_I2H, crossoverrate)
         childBrain.weights_H2H = this.brain.weights_H2H.crossover(other.brain.weights_H2H, crossoverrate)
         childBrain.weights_H2O = this.brain.weights_H2O.crossover(other.brain.weights_H2O, crossoverrate)

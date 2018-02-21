@@ -1,5 +1,5 @@
 class Snake {
-    constructor(gridsize, brain) {
+    constructor(gridsize, brain, legend = 0) {
         this.head = createVector(width / 2, height / 2)
         this.tail = [
             this.head.copy().sub(1 * gridsize, 0),
@@ -12,6 +12,7 @@ class Snake {
         this.leftToLive = 200
         this.lifetime = 0
         this.brain = brain
+        this.legend = legend
     }
 
     update() {

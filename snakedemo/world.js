@@ -29,10 +29,16 @@ class World {
 
         let legendCount = Math.max(1, this.snakes.length / 10 | 0)
         this.snakes = gradedSnakes.slice(0, legendCount)
-            .map(gs => new Snake(this.gridsize, gs[1].brain))
+            .map(gs => new Snake(this.gridsize, gs[1].brain, gs[1].legend + 1))
             .concat(
                 gradedSnakes.slice(legendCount)
-                    .map(s => randomSnake().makeChild(randomSnake())))
+                    .map(gs => {
+                        if (gs[1].legend > 0) {
+                            return new Snake(this.gridsize, gs[1].brain, gs.legend - 1)
+                        }
+                        return randomSnake().makeChild(randomSnake())
+                    })
+            )
     }
 
     update() {

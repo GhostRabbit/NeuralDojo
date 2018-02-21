@@ -43,7 +43,7 @@ class Snake {
     }
 
     fitness() {
-        return pow(this.lifetime, 2)
+        return (this.tail.length + 1) * pow(this.lifetime, 2)
     }
 
     makeChild(partner) {
@@ -114,7 +114,7 @@ class Snake {
 
     makeFood() {
         while (true) {
-            let food = new Food()
+            let food = new Food(this.gridsize)
             if (!this.onTail(food.pos))
                 return food
         }
@@ -170,15 +170,16 @@ class SnakeBrain {
 
 class Food {
     constructor(gridsize) {
+        this.gridsize = gridsize
         this.pos = createVector(
-            (random(width / 10) | 0) * 10,
-            (random(height / 10) | 0) * 10
+            (random(width / gridsize) | 0) * gridsize,
+            (random(height / gridsize) | 0) * gridsize
         )
     }
 
     show() {
         fill(0, 200, 0)
         stroke(0)
-        rect(this.pos.x, this.pos.y, 10, 10)
+        rect(this.pos.x, this.pos.y, this.gridsize, this.gridsize)
     }
 }

@@ -10,7 +10,7 @@ let maxMeanLife = 0
 let doDraw
 
 function setup() {
-	createCanvas(300, 300)
+	createCanvas(320, 320)
 	createP('')
 	doDraw = createCheckbox('Do draw', true)
 	generations = createSpan('')

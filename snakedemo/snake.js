@@ -7,6 +7,7 @@ class Snake {
             this.head.copy().sub(3 * gridsize, 0)
         ]
         this.gridsize = gridsize
+        this.eaten = []
         this.food = this.makeFood()
         this.alive = true
         this.leftToLive = 200
@@ -36,6 +37,8 @@ class Snake {
                 if (this.head.equals(this.food.pos)) {
                     this.leftToLive += 100
                     this.tail.push(this.head.copy())
+                    this.food.eaten = true
+                    this.eaten.push(this.food)
                     this.food = this.makeFood()
                 }
             }
@@ -126,12 +129,17 @@ class Snake {
     }
 
     show() {
+        if (this.alive) {
+            this.eaten.forEach(f => f.show())
+        }
         stroke(0)
         this.alive ? fill(150, 100, 100) : fill(100)
         this.tail.forEach(t => rect(t.x + 1, t.y + 1, this.gridsize - 1, this.gridsize - 1))
         this.alive ? fill(255, 200, 200) : fill(255)
         rect(this.head.x, this.head.y, this.gridsize, this.gridsize)
-        if (this.alive) this.food.show()
+        if (this.alive) {
+            this.food.show()
+        }
     }
 }
 
@@ -171,6 +179,7 @@ class SnakeBrain {
 class Food {
     constructor(gridsize) {
         this.gridsize = gridsize
+        this.eaten = false
         this.pos = createVector(
             (random(width / gridsize) | 0) * gridsize,
             (random(height / gridsize) | 0) * gridsize
@@ -178,8 +187,15 @@ class Food {
     }
 
     show() {
-        fill(0, 200, 0)
-        stroke(0)
-        rect(this.pos.x, this.pos.y, this.gridsize, this.gridsize)
+
+        if (this.eaten) {
+            noFill()
+            stroke(0, 255, 0)
+            rect(this.pos.x + 1, this.pos.y + 1, this.gridsize - 1, this.gridsize - 1)
+        } else {
+            fill(0, 200, 0)
+            stroke(0)
+            rect(this.pos.x, this.pos.y, this.gridsize, this.gridsize)
+        }
     }
 }

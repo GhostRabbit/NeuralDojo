@@ -5,6 +5,10 @@
 </head>
 
 <body>
+    <p>
+        <a href="https://github.com/GhostRabbit/NeuralDojo">https://github.com/GhostRabbit/NeuralDojo</a>
+    </p>
+
     <p>Sources</p>
     <ul>
         <li>
@@ -63,10 +67,10 @@
             <a href="./perceptrondemo/demo.html">Perceptron demo</a>
         </li>
         <li>
-            <a href="./xordemo/demo.html">XOR demo</a>
+            <a href="./linedemo/demo.html">Neural Network line distance</a>
         </li>
         <li>
-            <a href="./linedemo/demo.html">Neural Network line distance</a>
+            <a href="./xordemo/demo.html">XOR demo</a>
         </li>
         <li>
             <a href="./distdemo/demo.html">Neural Network clustering</a>
@@ -85,9 +89,9 @@
         </li>
         <li>What is different from examples above?
             <ul>
-                <li>Brain is defined as 24 inputs, 16 hidden, 4 outputs</li>
+                <li>Brain is defined as 24 inputs, 2 layers of 18 hidden, 4 outputs</li>
                 <li>Inputs measure wall, food and self distance in 8 directions</li>
-                <li>Outputs are direction</li>
+                <li>Outputs are absolute directions</li>
                 <li>Genetic training:
                     <ul>
                         <li>Each generation 2000 snakes</li>
@@ -98,12 +102,16 @@
                             <ul>
                                 <li>Best survives, rest is children</li>
                                 <li>A child is made from two (random based on fitness) parents</li>
-                                <li>A child brain is mutated based on parents</li>
+                                <li>A child brain is generated based on parents</li>
+                                <li>The child brain is then lightly mutated</li>
                             </ul>
                         </li>
                     </ul>
                 </li>
             </ul>
+        </li>
+        <li>
+            <a href="./snakedemo/demo.html">Snake demo</a>
         </li>
     </ul>
 </body>

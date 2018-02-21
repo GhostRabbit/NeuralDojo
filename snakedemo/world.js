@@ -34,7 +34,7 @@ class World {
                 gradedSnakes.slice(legendCount)
                     .map(gs => {
                         if (gs[1].legend > 0) {
-                            return new Snake(this.gridsize, gs[1].brain, gs.legend - 1)
+                            return new Snake(this.gridsize, gs[1].brain, gs[1].legend - 1)
                         }
                         return randomSnake().makeChild(randomSnake())
                     })

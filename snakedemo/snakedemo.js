@@ -10,7 +10,7 @@ let maxMeanLife = 0
 let doDraw
 
 function setup() {
-	createCanvas(400, 400)
+	createCanvas(300, 300)
 	createP('')
 	doDraw = createCheckbox('Do draw', true)
 	generations = createSpan('')
@@ -19,15 +19,16 @@ function setup() {
 	createP('')
 	lifescore = createSpan('')
 
-	world = new World(10, 500)
+	world = new World(10, 256)
 }
 
 function draw() {
-	if (doDraw.checked()) {
-		drawBoard()
-		world.show()
+	drawBoard()
+	world.show()
+	for (let i = 0; i < 100; i++) {
+		update()
+		if (doDraw.checked()) break;
 	}
-	update()
 }
 
 function drawBoard() {
@@ -65,3 +66,10 @@ function updateStatistics() {
 	)
 }
 
+function listMr() {
+	return world.snakes.map(s => s.mutationrate)
+}
+
+function listLegends() {
+	return world.snakes.map(s => s.legend)
+}

@@ -13,6 +13,7 @@ class Snake {
         this.lifetime = 0
         this.brain = brain
         this.legend = legend
+        this.mutationrate = 0.01
     }
 
     update() {
@@ -47,7 +48,10 @@ class Snake {
 
     makeChild(partner) {
         let childBrain = this.brain.crossover(partner.brain)
-        return new Snake(this.gridsize, childBrain.mutate(0.01))
+        let mRate = (this.mutationrate + partner.mutationrate) / 2
+        let child = new Snake(this.gridsize, childBrain.mutate(mRate))
+        child.mutationrate = random() < mRate ? mRate * random(0.5, 1.5) : mRate
+        return child
     }
 
     nextMove() {

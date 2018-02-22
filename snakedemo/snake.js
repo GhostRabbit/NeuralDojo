@@ -2,10 +2,6 @@ class Snake {
     constructor(gridsize, brain, legend = 0) {
         this.head = createVector(width / 2, height / 2)
         this.tail = []
-        //     this.head.copy().sub(1 * gridsize, 0),
-        //     this.head.copy().sub(2 * gridsize, 0),
-        //     this.head.copy().sub(3 * gridsize, 0)
-        // ]
         this.gridsize = gridsize
         this.food = this.makeFood()
         this.alive = true
@@ -35,7 +31,6 @@ class Snake {
                 // check if eat
                 if (this.head.equals(this.food.pos)) {
                     this.leftToLive += 100
-                    //this.tail.push(this.head.copy())
                     this.growth++
                     this.food = this.makeFood()
                 }

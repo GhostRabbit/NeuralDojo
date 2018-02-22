@@ -46,7 +46,7 @@ class Snake {
     }
 
     fitness() {
-        return (this.tail.length + 1) * pow(this.lifetime, 2)
+        return this.lifetime * pow(this.tail.length + 1, 2)
     }
 
     makeChild(partner) {
@@ -132,9 +132,12 @@ class Snake {
         if (this.alive) {
             this.eaten.forEach(f => f.show())
         }
-        stroke(0)
         this.alive ? fill(150, 100, 100) : fill(100)
-        this.tail.forEach(t => rect(t.x + 1, t.y + 1, this.gridsize - 2, this.gridsize - 2))
+        this.alive ? stroke(0) : stroke(100)
+        const offset = 2
+        this.tail.forEach(t => rect(t.x + offset, t.y + offset,
+            this.gridsize - 2 * offset, this.gridsize - 2 * offset))
+        stroke(0)
         this.alive ? fill(255, 200, 200) : fill(255)
         rect(this.head.x, this.head.y, this.gridsize, this.gridsize)
         if (this.alive) {
@@ -160,18 +163,27 @@ class SnakeBrain {
     }
 
     crossover(other) {
-        let childBrain = new SnakeBrain()
+        let child = new SnakeBrain()
         let crossoverrate = Math.random()
-        childBrain.weights_I2H = this.brain.weights_I2H.crossover(other.brain.weights_I2H, crossoverrate)
-        childBrain.weights_H2H = this.brain.weights_H2H.crossover(other.brain.weights_H2H, crossoverrate)
-        childBrain.weights_H2O = this.brain.weights_H2O.crossover(other.brain.weights_H2O, crossoverrate)
-        return childBrain
+        child.brain.weights_I2H = this.brain.weights_I2H.crossover(other.brain.weights_I2H, crossoverrate)
+        child.brain.weights_H2H = this.brain.weights_H2H.crossover(other.brain.weights_H2H, crossoverrate)
+        child.brain.weights_H2O = this.brain.weights_H2O.crossover(other.brain.weights_H2O, crossoverrate)
+
+        child.brain.bias_H1 = this.brain.bias_H1.crossover(other.brain.bias_H1)
+        child.brain.bias_H2 = this.brain.bias_H2.crossover(other.brain.bias_H2)
+        child.brain.bias_O = this.brain.bias_O.crossover(other.brain.bias_O)
+
+        return child
     }
 
     mutate(mutationrate) {
         this.brain.weights_I2H = this.brain.weights_I2H.mutate(mutationrate)
         this.brain.weights_H2H = this.brain.weights_H2H.mutate(mutationrate)
         this.brain.weights_H2O = this.brain.weights_H2O.mutate(mutationrate)
+
+        this.brain.bias_H1 = this.brain.bias_H1.mutate(mutationrate)
+        this.brain.bias_H2 = this.brain.bias_H2.mutate(mutationrate)
+        this.brain.bias_O = this.brain.bias_O.mutate(mutationrate)
         return this
     }
 }
@@ -190,12 +202,12 @@ class Food {
 
         if (this.eaten) {
             noFill()
-            stroke(0, 200, 0)
+            stroke(200, 200, 0)
         } else {
             fill(0, 200, 0)
-            stroke(0)
+            stroke(0, 100, 0)
         }
-        let offset = 2
+        const offset = 2
         rect(this.pos.x + offset, this.pos.y + offset,
             this.gridsize - 2 * offset, this.gridsize - 2 * offset)
     }

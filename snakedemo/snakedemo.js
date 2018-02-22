@@ -1,33 +1,45 @@
 let world
+
+// Controls
+let draws
+let displayCount
 let hightscore
 let lifescore
 let generations
 let genCounter = 0
+
+// Stats
 let maxLength = 0
 let maxMeanLength = 0
 let maxLife = 0
 let maxMeanLife = 0
-let doDraw
+
 
 function setup() {
 	createCanvas(320, 320)
 	createP('')
-	doDraw = createCheckbox('Do draw', true)
+	world = new World(10, 256)
+
+	draws = createSpan('Draw snakes: ')
+	displayCount = createSlider(0, world.snakes.length, world.snakes.length)
+	//doDraw = createCheckbox('Do draw', true)
 	generations = createSpan('')
 	createP('')
 	highscore = createSpan('')
 	createP('')
 	lifescore = createSpan('')
 
-	world = new World(10, 256)
 }
 
 function draw() {
-	drawBoard()
-	world.show()
-	for (let i = 0; i < 100; i++) {
+	if (displayCount.value() > 0) {
+		drawBoard()
+		world.show(displayCount.value())
 		update()
-		if (doDraw.checked()) break;
+	} else {
+		for (let i = 0; i < 100; i++) {
+			update()
+		}
 	}
 }
 
@@ -55,6 +67,7 @@ function updateStatistics() {
 	maxLife = max(maxLife, currentMaxLife)
 	maxMeanLife = max(maxMeanLife, currentMeanLife)
 
+	draws.html('Draw ' + displayCount.value() + ' snakes:')
 	generations.html('Generations: ' + (++genCounter))
 	highscore.html(
 		'Longest snake: ' + maxLength + ' (' + currentMaxLength + ')' +

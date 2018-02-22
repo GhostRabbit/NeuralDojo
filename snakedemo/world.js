@@ -47,8 +47,15 @@ class World {
         }
     }
 
-    show() {
-        this.snakes.filter(s => !s.alive).forEach(s => s.show())
-        this.snakes.filter(s => s.alive).forEach(s => s.show())
+    show(number) {
+        let alive = this.snakes.filter(s => s.alive)
+        if (alive.length > number) {
+            alive.slice(0, number).forEach(s => s.show())
+            return
+        }
+        number -= alive.length
+        let dead = this.snakes.filter(s => !s.alive)
+        dead.slice(0, number).forEach(s => s.show())
+        alive.forEach(s => s.show())
     }
 }

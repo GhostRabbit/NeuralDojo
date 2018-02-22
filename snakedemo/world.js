@@ -11,7 +11,7 @@ class World {
         return this.snakes.every(s => !s.alive)
     }
 
-    breed() {
+    breed(legendRatio) {
         let gradedSnakes = this.snakes.map(s => [s.fitness(), s]).sort((a, b) => b[0] - a[0])
         let fitnessSum = gradedSnakes.reduce((sum, s) => sum + s[0], 0)
 
@@ -27,7 +27,7 @@ class World {
             console.error('failure to find snake at', selectPoint, 'in', sum)
         }
 
-        let legendCount = Math.max(1, this.snakes.length / 10 | 0)
+        let legendCount = Math.max(1, (legendRatio * this.snakes.length) | 0)
         this.snakes = gradedSnakes.slice(0, legendCount)
             .map(gs => new Snake(this.gridsize, gs[1].brain, 0.99 * (gs[1].legend + 1)))
             .concat(

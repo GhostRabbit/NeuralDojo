@@ -134,7 +134,7 @@ class Snake {
         }
         stroke(0)
         this.alive ? fill(150, 100, 100) : fill(100)
-        this.tail.forEach(t => rect(t.x + 1, t.y + 1, this.gridsize - 1, this.gridsize - 1))
+        this.tail.forEach(t => rect(t.x + 1, t.y + 1, this.gridsize - 2, this.gridsize - 2))
         this.alive ? fill(255, 200, 200) : fill(255)
         rect(this.head.x, this.head.y, this.gridsize, this.gridsize)
         if (this.alive) {
@@ -190,12 +190,13 @@ class Food {
 
         if (this.eaten) {
             noFill()
-            stroke(0, 255, 0)
-            rect(this.pos.x + 1, this.pos.y + 1, this.gridsize - 1, this.gridsize - 1)
+            stroke(0, 200, 0)
         } else {
             fill(0, 200, 0)
             stroke(0)
-            rect(this.pos.x, this.pos.y, this.gridsize, this.gridsize)
         }
+        let offset = 2
+        rect(this.pos.x + offset, this.pos.y + offset,
+            this.gridsize - 2 * offset, this.gridsize - 2 * offset)
     }
 }

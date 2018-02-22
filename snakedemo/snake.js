@@ -1,13 +1,12 @@
 class Snake {
     constructor(gridsize, brain, legend = 0) {
         this.head = createVector(width / 2, height / 2)
-        this.tail = [
-            this.head.copy().sub(1 * gridsize, 0),
-            this.head.copy().sub(2 * gridsize, 0),
-            this.head.copy().sub(3 * gridsize, 0)
-        ]
+        this.tail = []
+        //     this.head.copy().sub(1 * gridsize, 0),
+        //     this.head.copy().sub(2 * gridsize, 0),
+        //     this.head.copy().sub(3 * gridsize, 0)
+        // ]
         this.gridsize = gridsize
-        this.eaten = []
         this.food = this.makeFood()
         this.alive = true
         this.leftToLive = 200
@@ -15,6 +14,7 @@ class Snake {
         this.brain = brain
         this.legend = legend
         this.mutationrate = 0.01
+        this.growth = 3
     }
 
     update() {
@@ -25,20 +25,18 @@ class Snake {
             if (this.alive) {
                 this.lifetime++
                 // do move
-                let last = this.head
-                for (let i = 0; i < this.tail.length; i++) {
-                    let temp = this.tail[i]
-                    this.tail[i] = last
-                    last = temp
+                if (this.growth == 0) {
+                    this.tail.pop()
+                } else {
+                    this.growth--
                 }
+                this.tail.unshift(this.head.copy())
                 this.head = p5.Vector.add(this.head, dir)
-
                 // check if eat
                 if (this.head.equals(this.food.pos)) {
                     this.leftToLive += 100
-                    this.tail.push(this.head.copy())
-                    this.food.eaten = true
-                    this.eaten.push(this.food)
+                    //this.tail.push(this.head.copy())
+                    this.growth++
                     this.food = this.makeFood()
                 }
             }
@@ -129,20 +127,14 @@ class Snake {
     }
 
     show() {
-        if (this.alive) {
-            this.eaten.forEach(f => f.show())
-        }
-        this.alive ? fill(150, 100, 100) : fill(100)
-        this.alive ? stroke(0) : stroke(100)
         const offset = 2
+        noStroke()
+        this.alive ? fill(150, 100, 100) : fill(100)
         this.tail.forEach(t => rect(t.x + offset, t.y + offset,
             this.gridsize - 2 * offset, this.gridsize - 2 * offset))
-        stroke(0)
-        this.alive ? fill(255, 200, 200) : fill(255)
-        rect(this.head.x, this.head.y, this.gridsize, this.gridsize)
-        if (this.alive) {
-            this.food.show()
-        }
+        this.alive ? fill(255, 200, 200) : fill(230)
+        rect(this.head.x + 1, this.head.y + 1, this.gridsize - 2, this.gridsize - 2)
+        if (this.alive) this.food.show()
     }
 }
 
@@ -191,7 +183,6 @@ class SnakeBrain {
 class Food {
     constructor(gridsize) {
         this.gridsize = gridsize
-        this.eaten = false
         this.pos = createVector(
             (random(width / gridsize) | 0) * gridsize,
             (random(height / gridsize) | 0) * gridsize
@@ -199,16 +190,10 @@ class Food {
     }
 
     show() {
-
-        if (this.eaten) {
-            noFill()
-            stroke(200, 200, 0)
-        } else {
-            fill(0, 200, 0)
-            stroke(0, 100, 0)
-        }
-        const offset = 2
-        rect(this.pos.x + offset, this.pos.y + offset,
-            this.gridsize - 2 * offset, this.gridsize - 2 * offset)
+        fill(0, 200, 0)
+        strokeWeight(1)
+        stroke(0, 100, 0)
+        rect(this.pos.x + 2, this.pos.y + 2,
+            this.gridsize - 5, this.gridsize - 5)
     }
 }

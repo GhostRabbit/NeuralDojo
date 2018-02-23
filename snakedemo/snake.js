@@ -31,7 +31,15 @@ class Snake {
                 // check if eat
                 if (this.head.equals(this.food.pos)) {
                     this.leftToLive += 100
-                    this.growth++
+                    if (this.tail.length < 10) {
+                        this.growth += 1
+                    } else if (this.tail.length < 50) {
+                        this.growth += 4
+                    } else if (this.tail.length < 250) {
+                        this.growth += 8
+                    } else {
+                        this.growth += 16
+                    }
                     this.food = this.makeFood()
                 }
             }
@@ -39,7 +47,7 @@ class Snake {
     }
 
     fitness() {
-        return this.lifetime * pow(this.tail.length + 1, 2)
+        return this.lifetime * pow(max(1, this.tail.length - 2), 2)
     }
 
     makeChild(partner) {

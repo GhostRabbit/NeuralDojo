@@ -3,7 +3,7 @@ class World {
         this.snakes = []
         this.gridsize = gridsize
         for (let i = 0; i < numberOfSnakes; i++) {
-            this.snakes.push(new Snake(gridsize, new SnakeBrain()))
+            this.snakes.push(new Snake(this.gridsize, new SnakeBrain()))
         }
     }
 
@@ -24,21 +24,26 @@ class World {
                     return gradedSnakes[i][1]
                 }
             }
-            console.error('failure to find snake at', selectPoint, 'in', sum)
         }
 
         let legendCount = Math.max(1, (legendRatio * this.snakes.length) | 0)
-        this.snakes = gradedSnakes.slice(0, legendCount)
-            .map(gs => new Snake(this.gridsize, gs[1].brain, 0.99 * (gs[1].legend + 1)))
-            .concat(
-                gradedSnakes.slice(legendCount)
-                    .map(gs => {
-                        if (gs[1].legend > 0) {
-                            return new Snake(this.gridsize, gs[1].brain, 0.99 * (gs[1].legend - 1))
-                        }
-                        return randomSnake().makeChild(randomSnake())
-                    })
-            )
+
+        this.snakes = gradedSnakes.map((gs, i) => {
+            if (i < legendCount) {
+                // Legends be more legend
+                return new Snake(this.gridsize, gs[1].brain, 0.99 * (gs[1].legend + 1))
+            }
+            if (gs[1].legend > 0) {
+                // Let old legends survive
+                return new Snake(this.gridsize, gs[1].brain, 0.99 * (gs[1].legend - 1))
+            }
+            if (i < gradedSnakes.length - legendCount) {
+                // Make children
+                return randomSnake().makeChild(randomSnake())
+            }
+            // Let some new blood in
+            return new Snake(this.gridsize, new SnakeBrain())
+        })
     }
 
     update() {

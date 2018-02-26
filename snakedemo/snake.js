@@ -193,9 +193,9 @@ class Food {
     }
 
     show() {
-        fill(0, 200, 0)
         strokeWeight(1)
-        stroke(0, 100, 0)
+        stroke(0, 200, 0)
+        fill(0, 100, 0)
         rect(this.pos.x + 2, this.pos.y + 2,
             this.gridsize - 5, this.gridsize - 5)
     }

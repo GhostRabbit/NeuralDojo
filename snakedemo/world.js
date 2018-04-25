@@ -1,10 +1,8 @@
 class World {
     constructor(gridsize, numberOfSnakes) {
-        this.snakes = []
         this.gridsize = gridsize
-        for (let i = 0; i < numberOfSnakes; i++) {
-            this.snakes.push(new Snake(this.gridsize, new SnakeBrain()))
-        }
+        this.snakes = new Array(numberOfSnakes).fill(0)
+            .map(() => new Snake(this.gridsize, new SnakeBrain()))
     }
 
     done() {
@@ -12,18 +10,21 @@ class World {
     }
 
     breed(legendRatio) {
-        let gradedSnakes = this.snakes.map(s => [s.fitness(), s]).sort((a, b) => b[0] - a[0])
-        let fitnessSum = gradedSnakes.reduce((sum, s) => sum + s[0], 0)
+        let gradedSnakes = this.snakes.map(s => {
+            return {
+                fitness: s.fitness(),
+                snake: s
+            }
+        }).sort((a, b) => b.fitness - a.fitness)
+        let fitnessSum = gradedSnakes.reduce((sum, s) => sum + s.fitness, 0)
 
         const randomSnake = () => {
             let selectPoint = random(fitnessSum)
             let sum = 0
-            for (let i = 0; i < gradedSnakes.length; i++) {
-                sum += gradedSnakes[i][0]
-                if (selectPoint < sum) {
-                    return gradedSnakes[i][1]
-                }
-            }
+            return gradedSnakes.find(gs => {
+                sum += gs.fitness
+                return selectPoint < sum
+            }).snake
         }
 
         let legendCount = Math.max(1, (legendRatio * this.snakes.length) | 0)
@@ -31,11 +32,11 @@ class World {
         this.snakes = gradedSnakes.map((gs, i) => {
             if (i < legendCount) {
                 // Legends be more legend
-                return new Snake(this.gridsize, gs[1].brain, 0.99 * (gs[1].legend + 1))
+                return new Snake(this.gridsize, gs.snake.brain, 0.99 * (gs.snake.legend + 1))
             }
-            if (gs[1].legend > 0) {
+            if (gs.snake.legend > 0) {
                 // Let old legends survive
-                return new Snake(this.gridsize, gs[1].brain, 0.99 * (gs[1].legend - 1))
+                return new Snake(this.gridsize, gs.snake.brain, 0.99 * (gs.snake.legend - 1))
             }
             if (i < gradedSnakes.length - legendCount) {
                 // Make children

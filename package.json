@@ -15,9 +15,6 @@
   "jest": {
     "testEnvironmentOptions": {
       "url": "http://localhost/"
-    },
-    "moduleNameMapper": {
-      "\\.(css|scss)$": "<rootDir>/__mocks__/styleMock.js"
     }
   }
 }

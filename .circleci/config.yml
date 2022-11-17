@@ -16,3 +16,8 @@ jobs:
       - run:
           command: npm run test
           name: Run tests
+
+workflows:
+  test_my_app:
+    jobs:
+      - build_and_test

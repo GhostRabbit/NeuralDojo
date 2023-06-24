@@ -45,6 +45,12 @@ function draw() {
 	}
 }
 
+function keyTyped() {
+  if (key === 'b') {
+    console.log(world.snakes[0].brain)
+  }
+}
+
 function drawBoard() {
 	background(40)
 	draws.html(displayCount.value() + ' drawn')

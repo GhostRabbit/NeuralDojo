@@ -94,7 +94,6 @@ class Snake {
             return result
         }
         return directions.map(d => inDirection(d)).reduce((acc, v) => acc.concat(v), [])
-
     }
 
     deathCheck(dir) {
@@ -143,11 +142,11 @@ class Snake {
 
 class SnakeBrain {
     constructor() {
-        this.brain = new NeuralNetwork(24, 18, 4)
+        this.neurons = new NeuralNetwork(24, 18, 4)
     }
 
     decideMove(impressions) {
-        let output = this.brain.predict(impressions)
+        let output = this.neurons.predict(impressions)
         let maxOut = output.reduce((acc, o, i) => o < acc[0] ? acc : [o, i], [-1, -1])[1]
         switch (maxOut) {
             case 0: return createVector(-1, 0)
@@ -160,25 +159,25 @@ class SnakeBrain {
     crossover(other) {
         let child = new SnakeBrain()
         let crossoverrate = Math.random()
-        child.brain.weights_I2H = this.brain.weights_I2H.crossover(other.brain.weights_I2H, crossoverrate)
-        child.brain.weights_H2H = this.brain.weights_H2H.crossover(other.brain.weights_H2H, crossoverrate)
-        child.brain.weights_H2O = this.brain.weights_H2O.crossover(other.brain.weights_H2O, crossoverrate)
+        child.neurons.weights_I2H = this.neurons.weights_I2H.crossover(other.neurons.weights_I2H, crossoverrate)
+        child.neurons.weights_H2H = this.neurons.weights_H2H.crossover(other.neurons.weights_H2H, crossoverrate)
+        child.neurons.weights_H2O = this.neurons.weights_H2O.crossover(other.neurons.weights_H2O, crossoverrate)
 
-        child.brain.bias_H1 = this.brain.bias_H1.crossover(other.brain.bias_H1)
-        child.brain.bias_H2 = this.brain.bias_H2.crossover(other.brain.bias_H2)
-        child.brain.bias_O = this.brain.bias_O.crossover(other.brain.bias_O)
+        child.neurons.bias_H1 = this.neurons.bias_H1.crossover(other.neurons.bias_H1)
+        child.neurons.bias_H2 = this.neurons.bias_H2.crossover(other.neurons.bias_H2)
+        child.neurons.bias_O = this.neurons.bias_O.crossover(other.neurons.bias_O)
 
         return child
     }
 
     mutate(mutationrate) {
-        this.brain.weights_I2H = this.brain.weights_I2H.mutate(mutationrate)
-        this.brain.weights_H2H = this.brain.weights_H2H.mutate(mutationrate)
-        this.brain.weights_H2O = this.brain.weights_H2O.mutate(mutationrate)
+        this.neurons.weights_I2H = this.neurons.weights_I2H.mutate(mutationrate)
+        this.neurons.weights_H2H = this.neurons.weights_H2H.mutate(mutationrate)
+        this.neurons.weights_H2O = this.neurons.weights_H2O.mutate(mutationrate)
 
-        this.brain.bias_H1 = this.brain.bias_H1.mutate(mutationrate)
-        this.brain.bias_H2 = this.brain.bias_H2.mutate(mutationrate)
-        this.brain.bias_O = this.brain.bias_O.mutate(mutationrate)
+        this.neurons.bias_H1 = this.neurons.bias_H1.mutate(mutationrate)
+        this.neurons.bias_H2 = this.neurons.bias_H2.mutate(mutationrate)
+        this.neurons.bias_O = this.neurons.bias_O.mutate(mutationrate)
         return this
     }
 }
